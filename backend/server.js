@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
@@ -35,8 +35,11 @@ db.serialize(() => {
     occupation TEXT,
     bio TEXT,
     budget INTEGER,
+    budget_min INTEGER,
+    budget_max INTEGER,
     location TEXT,
     move_in_date TEXT,
+    lease_duration TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
@@ -156,6 +159,66 @@ app.get('/api/profile/:id', authenticateToken, (req, res) => {
       
       delete row.password;
       res.json(row);
+    }
+  );
+});
+
+app.put('/api/profile/:userId', authenticateToken, (req, res) => {
+  const userId = req.params.userId;
+  const { 
+    name, age, gender, occupation, bio, 
+    budgetMin, budgetMax, location, move_in_date, lease_duration,
+    smoking, pets, nightOwl, cleanlinessLevel, guestsFrequency, noiseLevel 
+  } = req.body;
+  
+  // Update user profile
+  db.run(
+    `UPDATE users SET 
+     name = ?, age = ?, gender = ?, occupation = ?, bio = ?,
+     budget_min = ?, budget_max = ?, location = ?, move_in_date = ?, lease_duration = ?
+     WHERE id = ?`,
+    [name, age, gender, occupation, bio, budgetMin, budgetMax, location, move_in_date, lease_duration, userId],
+    (err) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      // Check if preferences exist
+      db.get('SELECT id FROM preferences WHERE user_id = ?', [userId], (err, existing) => {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        
+        if (existing) {
+          // Update preferences
+          db.run(
+            `UPDATE preferences SET 
+             smoking = ?, pets = ?, night_owl = ?, 
+             cleanliness_level = ?, guests_frequency = ?, noise_level = ?
+             WHERE user_id = ?`,
+            [smoking, pets, nightOwl, cleanlinessLevel, guestsFrequency, noiseLevel, userId],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: err.message });
+              }
+              res.json({ message: 'Profile updated successfully' });
+            }
+          );
+        } else {
+          // Insert new preferences
+          db.run(
+            `INSERT INTO preferences (user_id, smoking, pets, night_owl, cleanliness_level, guests_frequency, noise_level)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [userId, smoking, pets, nightOwl, cleanlinessLevel, guestsFrequency, noiseLevel],
+            (err) => {
+              if (err) {
+                return res.status(500).json({ error: err.message });
+              }
+              res.json({ message: 'Profile updated successfully' });
+            }
+          );
+        }
+      });
     }
   );
 });

@@ -1,7 +1,10 @@
 .navbar {
-  background: #667eea;
+  background: #495057;
   padding: 1rem 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1000;
+  border-bottom: 1px solid #6c757d;
 }
 
 .navbar-container {
@@ -14,10 +17,16 @@
 }
 
 .navbar-brand a {
-  color: white;
+  color: #f8f9fa;
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+
+.navbar-brand a:hover {
+  color: #ffffff;
 }
 
 .navbar-menu {
@@ -27,27 +36,209 @@
 }
 
 .navbar-item {
-  color: white;
+  color: #dee2e6;
   text-decoration: none;
   font-weight: 500;
-  transition: opacity 0.3s;
+  transition: color 0.3s;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .navbar-item:hover {
-  opacity: 0.8;
+  color: #ffffff;
 }
 
-.btn-logout {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid white;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+/* Profile Dropdown Styles */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid #6c757d;
+  background: #343a40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  padding: 0;
+  overflow: hidden;
 }
 
-.btn-logout:hover {
-  background: rgba(255, 255, 255, 0.3);
+.profile-avatar:hover {
+  border-color: #adb5bd;
+  background: #495057;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initial {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f8f9fa;
+  text-transform: uppercase;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #343a40;
+  border: 1px solid #495057;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  z-index: 1001;
+  animation: dropdownFadeIn 0.2s ease;
+  padding: 0.5rem 0;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  padding: 1rem;
+  background: #0f0f0f;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.dropdown-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dropdown-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dropdown-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initial-large {
+  font-size: 24px;
+  font-weight: 600;
+  color: #667eea;
+  text-transform: uppercase;
+}
+
+.dropdown-user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.dropdown-user-name {
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-user-email {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  display: none;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #dee2e6;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dropdown-item:hover {
+  background: #495057;
+  color: #ffffff;
+}
+
+.dropdown-logout {
+  color: #adb5bd;
+  border-top: 1px solid #495057;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+}
+
+.dropdown-logout:hover {
+  background: #495057;
+  color: #f8d7da;
+}
+
+.dropdown-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+/* Removed arrow/diamond pointing to avatar */
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .navbar-menu {
+    gap: 1rem;
+  }
+  
+  .navbar-item {
+    display: none;
+  }
+  
+  @media (min-width: 640px) {
+    .navbar-item:first-child {
+      display: block;
+    }
+  }
+  
+  .dropdown-menu {
+    min-width: 240px;
+    right: -1rem;
+  }
 }

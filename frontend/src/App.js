@@ -5,7 +5,6 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Matches from './components/Matches';
-import Preferences from './components/Preferences';
 import './App.css';
 
 function App() {
@@ -20,7 +19,7 @@ function App() {
           <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
           <Route path="/matches" element={isAuthenticated ? <Matches /> : <Navigate to="/login" />} />
-          <Route path="/preferences" element={isAuthenticated ? <Preferences /> : <Navigate to="/login" />} />
+          <Route path="/preferences" element={<Navigate to="/profile" />} />
           <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
         </Routes>
       </div>

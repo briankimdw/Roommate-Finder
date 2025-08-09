@@ -73,14 +73,14 @@ function Dashboard() {
             {profile?.user_id ? (
               <div className="preferences-summary">
                 <p>✓ Preferences set</p>
-                <button onClick={() => navigate('/preferences')} className="btn-secondary">
+                <button onClick={() => navigate('/profile')} className="btn-secondary">
                   Update Preferences
                 </button>
               </div>
             ) : (
               <div>
                 <p>Set your preferences to find better matches</p>
-                <button onClick={() => navigate('/preferences')} className="btn-primary">
+                <button onClick={() => navigate('/profile')} className="btn-primary">
                   Set Preferences
                 </button>
               </div>
