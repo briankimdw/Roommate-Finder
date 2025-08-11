@@ -17,6 +17,8 @@ frontend/dist/
 
 # Database files
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 
@@ -63,3 +65,9 @@ Thumbs.db
 
 # Yarn Integrity file
 .yarn-integrity
+
+# Claude-related files
+CLAUDE.md
+claude.md
+*claude*
+.claude/

@@ -32,7 +32,13 @@ function Dashboard() {
       const response = await axios.get(`http://localhost:5001/api/matches/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setMatches(response.data.slice(0, 3));
+      // Combine all matches and take the first 3
+      const allMatches = [
+        ...(response.data.confirmed || []),
+        ...(response.data.incoming || []),
+        ...(response.data.outgoing || [])
+      ];
+      setMatches(allMatches.slice(0, 3));
     } catch (err) {
       console.error('Error fetching matches:', err);
     }
