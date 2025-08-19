@@ -8,8 +8,8 @@ import Search from './components/Search';
 import Matches from './components/Matches';
 import './App.css';
 
-function App() {
-  const isAuthenticated = localStorage.getItem('token');
+const App: React.FC = () => {
+  const isAuthenticated: string | null = localStorage.getItem('token');
 
   return (
     <Router>
@@ -27,6 +27,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;

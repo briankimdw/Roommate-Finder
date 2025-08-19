@@ -1,180 +1,218 @@
-# Roommate Finder Application
+# Roommate Finder
 
-A full-stack web application that helps people find compatible roommates based on their preferences and lifestyle choices.
+A modern full-stack web application for finding compatible roommates with advanced search, filtering, and matching capabilities.
 
-## Features
+## 🌟 Features
 
-- **User Registration & Authentication**: Secure user accounts with JWT authentication
-- **Profile Management**: Users can create and edit their profiles with personal information
-- **Preference Settings**: Set living preferences including cleanliness, noise level, pet preferences, and more
-- **Smart Matching Algorithm**: Calculates compatibility scores based on user preferences
-- **Match Management**: Accept or reject potential roommate matches
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
+### Core Functionality
+- **User Authentication**: Secure registration and login with JWT tokens
+- **Advanced Search**: Browse and filter potential roommates with real-time results
+- **Smart Matching System**: Send, receive, accept, and decline match requests
+- **Detailed Profiles**: Comprehensive user profiles with lifestyle preferences
+- **Responsive Design**: Seamless experience across desktop and mobile devices
 
-## Tech Stack
+### Search & Discovery
+- **Multi-criteria Filtering**: 
+  - Budget range (min/max)
+  - Location with radius selection (1-50 miles)
+  - Age range and gender
+  - Lifestyle preferences (smoking, pets, night owl)
+- **User Cards**: Quick preview with essential information
+- **Profile Modals**: View detailed profiles without leaving the search page
+
+### Match Management
+- **Three-way Categorization**:
+  - ✅ Confirmed Matches - Mutually accepted connections
+  - 📥 Pending Requests - Incoming requests from others
+  - 📤 Sent Requests - Your outgoing requests
+- **Quick Actions**: Accept, decline, or cancel requests with one click
+- **Real-time Updates**: Instant refresh after any action
+
+## 🛠 Tech Stack
 
 ### Backend
-- **Node.js** with Express.js framework
-- **SQLite3** database for data persistence
-- **JWT** for authentication
+- **Node.js** with Express.js
+- **SQLite3** with WAL mode for better concurrency
+- **JWT** for secure authentication
 - **bcryptjs** for password hashing
-- **CORS** enabled for cross-origin requests
+- **Database pooling** with retry logic
 
 ### Frontend
-- **React** (Create React App)
-- **React Router** for navigation
-- **Axios** for API calls
-- **Custom CSS** for styling
+- **React.js** with React Router
+- **Axios** for API communication
+- **Custom CSS** with responsive design
+- **Modal system** for seamless UX
 
-## Project Structure
+## 📁 Project Structure
 
 ```
-roommate-finder/
-├── backend/
-│   ├── server.js         # Express server and API endpoints
-│   ├── roommate.db       # SQLite database (auto-created)
-│   ├── .env             # Environment variables
-│   └── package.json     # Backend dependencies
-│
+Roommate Finder/
 ├── frontend/
-│   ├── public/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Login.js        # Login page
-│   │   │   ├── Register.js     # Registration page
-│   │   │   ├── Dashboard.js    # Main dashboard
-│   │   │   ├── Profile.js      # User profile management
-│   │   │   ├── Preferences.js  # Living preferences
-│   │   │   ├── Matches.js      # View and manage matches
-│   │   │   ├── Navbar.js       # Navigation component
-│   │   │   └── *.css           # Component styles
-│   │   ├── App.js         # Main app component with routing
-│   │   └── App.css        # Global styles
-│   └── package.json       # Frontend dependencies
-│
-└── README.md
+│   │   │   ├── Login.js              # Styled login page
+│   │   │   ├── Register.js           # Multi-field registration
+│   │   │   ├── Dashboard.js          # User dashboard
+│   │   │   ├── Profile.js            # Profile management
+│   │   │   ├── Search.js             # Browse roommates
+│   │   │   ├── Matches.js            # Match management
+│   │   │   ├── UserProfileModal.js   # Profile viewing modal
+│   │   │   └── Navbar.js             # Navigation
+│   │   └── App.js                    # Main app with routing
+│   └── package.json
+└── backend/
+    ├── server.js                      # Express server & APIs
+    ├── database.js                    # Database management
+    ├── roommate.db                    # SQLite database
+    └── package.json
 ```
 
-## Installation
+## 🚀 Installation
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- npm or yarn package manager
+- npm or yarn
 
 ### Backend Setup
-
-1. Navigate to the backend directory:
 ```bash
 cd backend
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
 
-3. Create a `.env` file (already created with default values):
-```
-JWT_SECRET=your-secret-key-change-this-in-production
-PORT=5000
-```
+# Create .env file
+echo "JWT_SECRET=your-secret-key-here" > .env
+echo "PORT=5001" >> .env
 
-4. Start the backend server:
-```bash
+# Start server
 npm start
 ```
-
-The backend will run on `http://localhost:5000`
+Server runs on http://localhost:5001
 
 ### Frontend Setup
-
-1. Open a new terminal and navigate to the frontend directory:
 ```bash
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Start the React development server:
-```bash
 npm start
 ```
+Application opens at http://localhost:3000
 
-The frontend will run on `http://localhost:3000`
-
-## Usage
-
-1. **Register**: Create a new account with your basic information
-2. **Set Preferences**: After registration, you'll be prompted to set your living preferences
-3. **Complete Profile**: Add more details about yourself in the profile section
-4. **Calculate Matches**: Click "Calculate Matches" to find compatible roommates
-5. **Review Matches**: Browse through potential matches and see compatibility scores
-6. **Connect**: Accept matches you're interested in or pass on incompatible ones
-
-## API Endpoints
-
-### Authentication
-- `POST /api/register` - Register new user
-- `POST /api/login` - User login
-
-### User Management
-- `GET /api/profile/:id` - Get user profile
-- `PUT /api/preferences/:userId` - Update user preferences
-
-### Matching
-- `GET /api/matches/:userId` - Get user's matches
-- `POST /api/calculate-matches/:userId` - Calculate new matches
-- `POST /api/matches/:matchId/accept` - Accept a match
-- `POST /api/matches/:matchId/reject` - Reject a match
-
-## Database Schema
+## 📊 Database Schema
 
 ### Users Table
-- Basic user information (email, name, age, gender, etc.)
-- Housing preferences (budget, location, move-in date)
+- Personal info (name, age, gender, occupation, bio)
+- Housing preferences (budget range, location, move-in date)
+- Account details (email, password hash)
 
 ### Preferences Table
-- Lifestyle preferences (smoking, pets, night owl)
-- Living habits (cleanliness, guests, noise levels)
+- Lifestyle choices (smoking, pets, night owl)
+- Living habits (cleanliness, guests, noise - scale 1-5)
 
 ### Matches Table
-- Connections between users
-- Compatibility scores
-- Match status (pending/accepted/rejected)
+- Match relationships (from_user_id, to_user_id)
+- Status (pending, accepted, rejected)
+- Timestamps for tracking
 
-## Matching Algorithm
+## 🔌 API Endpoints
 
-The compatibility algorithm considers:
-- **Lifestyle Choices** (smoking, pets, sleep schedule): Binary matching
-- **Living Habits** (cleanliness, guests, noise): Scale-based matching (1-5)
-- Returns a compatibility score from 0-100%
+### Authentication
+- `POST /api/register` - Create account
+- `POST /api/login` - User login
 
-## Security Features
+### Profile
+- `GET /api/profile/:id` - Get user profile
+- `PUT /api/profile/:userId` - Update profile
+
+### Users & Search
+- `GET /api/users` - Get all users for search
+
+### Matches
+- `GET /api/matches/:userId` - Get categorized matches
+- `POST /api/match-request` - Send match request
+- `POST /api/matches/:id/accept` - Accept request
+- `POST /api/matches/:id/reject` - Reject request
+- `DELETE /api/matches/:id` - Cancel request
+
+## 💡 Key Features Explained
+
+### Smart Search System
+The search page allows users to:
+- Apply multiple filters simultaneously
+- See results update in real-time
+- Click on any user to view their full profile
+- Send match requests directly from search results
+
+### Match Request Flow
+1. **Browse** users in the Search page
+2. **Send** match requests to compatible roommates
+3. **Receive** requests from interested users
+4. **Accept/Decline** incoming requests
+5. **Connect** with confirmed matches
+
+### Profile System
+- Comprehensive profiles with personal and housing info
+- Lifestyle preferences for better matching
+- Living habit scales for compatibility
+- Custom lease duration options
+
+## 🔒 Security Features
 
 - Password hashing with bcrypt
 - JWT token authentication
 - Protected API routes
-- Input validation
-- SQL injection prevention
+- Input validation and sanitization
+- Database transaction safety
+- CORS properly configured
 
-## Future Enhancements
+## 📱 Responsive Design
 
-- Real-time messaging between matched users
+- Mobile-first approach
+- Breakpoints for all screen sizes
+- Touch-friendly interface
+- Optimized modal system for mobile
+
+## 🎨 UI/UX Highlights
+
+- Clean, modern interface with gray theme
+- Intuitive navigation
+- Clear visual hierarchy
+- Smooth transitions and animations
+- Consistent design language
+
+## 🔄 Recent Updates
+
+- Implemented user search with advanced filters
+- Added match request system
+- Created profile modal system
+- Redesigned matches page layout
+- Added database retry logic
+- Fixed match status tracking
+- Improved mobile responsiveness
+
+## 🚧 Future Enhancements
+
+- Real-time messaging between matches
 - Photo uploads for profiles
-- Advanced filtering options
 - Email notifications
-- Mobile app version
-- Integration with rental listings
-- Group housing support
-- Verification system
+- Advanced compatibility algorithm
+- Location-based search with maps
+- Social media integration
+- Roommate group formation
+- Lease document sharing
 
-## Contributing
+## 🤝 Contributing
 
-Feel free to fork this project and submit pull requests for any improvements.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## License
+## 📄 License
 
-This project is open source and available under the MIT License.
+This project is licensed under the MIT License.
+
+## 👏 Acknowledgments
+
+- React.js documentation and community
+- Express.js for robust backend framework
+- SQLite for lightweight database solution
+- The open-source community for inspiration

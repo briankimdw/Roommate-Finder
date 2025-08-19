@@ -1,0 +1,177 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  password         String
+  name             String
+  age              Int?
+  gender           String?
+  occupation       String?
+  bio              String?
+  budget           Int?     // deprecated, keeping for migration
+  budgetMin        Int?     @map("budget_min")
+  budgetMax        Int?     @map("budget_max")
+  location         String?
+  latitude         Float?   // for PostGIS location features
+  longitude        Float?   // for PostGIS location features
+  moveInDate       String?  @map("move_in_date")
+  leaseDuration    String?  @map("lease_duration")
+  customDuration   String?  @map("custom_duration")
+  emailVerified    Boolean  @default(false) @map("email_verified")
+  emailVerifyToken String?  @map("email_verify_token")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  preferences        Preferences?
+  sentMatches        Match[]       @relation("MatchSender")
+  receivedMatches    Match[]       @relation("MatchReceiver")
+  sentMessages       Message[]     @relation("MessageSender")
+  receivedMessages   Message[]     @relation("MessageReceiver")
+  conversationsAsUser1 Conversation[] @relation("ConversationUser1")
+  conversationsAsUser2 Conversation[] @relation("ConversationUser2")
+  reportsSent        Report[]      @relation("ReportSender")
+  reportsReceived    Report[]      @relation("ReportReceived")
+  blockedUsers       Block[]       @relation("BlockSender")
+  blockedByUsers     Block[]       @relation("BlockReceived")
+
+  @@map("users")
+}
+
+model Preferences {
+  id               Int  @id @default(autoincrement())
+  userId           Int  @unique @map("user_id")
+  smoking          Boolean @default(false)
+  pets             Boolean @default(false)
+  nightOwl         Boolean @default(false) @map("night_owl")
+  cleanlinessLevel Int     @default(3) @map("cleanliness_level")
+  guestsFrequency  Int     @default(3) @map("guests_frequency")
+  noiseLevel       Int     @default(3) @map("noise_level")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("preferences")
+}
+
+model Match {
+  id                 Int       @id @default(autoincrement())
+  fromUserId         Int       @map("from_user_id")
+  toUserId           Int       @map("to_user_id")
+  compatibilityScore Float?    @map("compatibility_score")
+  status             MatchStatus @default(PENDING)
+  message            String?
+  createdAt          DateTime  @default(now()) @map("created_at")
+  respondedAt        DateTime? @map("responded_at")
+
+  // Relations
+  fromUser User @relation("MatchSender", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("MatchReceiver", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@map("matches")
+}
+
+model Conversation {
+  id        Int      @id @default(autoincrement())
+  user1Id   Int      @map("user1_id")
+  user2Id   Int      @map("user2_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user1    User      @relation("ConversationUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2    User      @relation("ConversationUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@unique([user1Id, user2Id])
+  @@map("conversations")
+}
+
+model Message {
+  id             Int      @id @default(autoincrement())
+  conversationId Int      @map("conversation_id")
+  senderId       Int      @map("sender_id")
+  receiverId     Int      @map("receiver_id")
+  content        String
+  messageType    MessageType @default(TEXT) @map("message_type")
+  readAt         DateTime? @map("read_at")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver     User         @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Report {
+  id         Int        @id @default(autoincrement())
+  reporterId Int        @map("reporter_id")
+  reportedId Int        @map("reported_id")
+  reason     ReportReason
+  description String?
+  status     ReportStatus @default(PENDING)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  resolvedAt DateTime?   @map("resolved_at")
+
+  // Relations
+  reporter User @relation("ReportSender", fields: [reporterId], references: [id], onDelete: Cascade)
+  reported User @relation("ReportReceived", fields: [reportedId], references: [id], onDelete: Cascade)
+
+  @@map("reports")
+}
+
+model Block {
+  id        Int      @id @default(autoincrement())
+  blockerId Int      @map("blocker_id")
+  blockedId Int      @map("blocked_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  blocker User @relation("BlockSender", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("BlockReceived", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@map("blocks")
+}
+
+enum MatchStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+}
+
+enum ReportReason {
+  INAPPROPRIATE_CONTENT
+  HARASSMENT
+  SPAM
+  FAKE_PROFILE
+  SAFETY_CONCERN
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
